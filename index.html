@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recetas de Comida</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <h1>Recetas de Comida</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="registro.html">Registro</a>
+            <a href="login.html">Login</a>
+            <a href="nueva-receta.html">Nueva Receta</a>
+        </nav>
+    </header>
+    <main>
+        <section id="lista-recetas">
+            <!-- Aquí se listarán las recetas -->
+        </section>
+    </main>
+    <script>
+        async function cargarRecetas() {
+            const response = await fetch('http://localhost:3000/api/recetas');
+            const recetas = await response.json();
+            const listaRecetas = document.getElementById('lista-recetas');
+            listaRecetas.innerHTML = '';
+            recetas.forEach(receta => {
+                const recetaDiv = document.createElement('div');
+                recetaDiv.classList.add('receta');
+                recetaDiv.innerHTML = `
+                    <h2>${receta.titulo}</h2>
+                    <p><strong>Ingredientes:</strong> ${receta.ingredientes}</p>
+                    <p><strong>Instrucciones:</strong> ${receta.instrucciones}</p>
+                    <img src="${receta.imagen}" alt="${receta.titulo}">
+                `;
+                listaRecetas.appendChild(recetaDiv);
+            });
+        }
+        cargarRecetas();
+    </script>
+</body>
+</html>

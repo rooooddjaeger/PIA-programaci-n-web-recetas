@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Receta</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <h1>Agregar Nueva Receta</h1>
+    </header>
+    <main>
+        <form id="nueva-receta-form">
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" required>
+            <label for="ingredientes">Ingredientes:</label>
+            <textarea id="ingredientes" name="ingredientes" required></textarea>
+            <label for="instrucciones">Instrucciones:</label>
+            <textarea id="instrucciones" name="instrucciones" required></textarea>
+            <label for="imagen">Imagen:</label>
+            <input type="text" id="imagen" name="imagen" required>
+            <button type="submit">Agregar Receta</button>
+        </form>
+    </main>
+    <script>
+        document.getElementById('nueva-receta-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const titulo = document.getElementById('titulo').value;
+            const ingredientes = document.getElementById('ingredientes').value;
+            const instrucciones = document.getElementById('instrucciones').value;
+            let imagen = document.getElementById('imagen').value;
+
+            // Verificar si la entrada es una URL o una ruta de archivo local
+            if (imagen.startsWith('http://') || imagen.startsWith('https://') || imagen.startsWith('file://')) {
+                // Si es una URL o una ruta de archivo local, usarla directamente
+                imagen = { url: imagen }; // Convertir la imagen a un objeto con una propiedad 'url'
+            } else {
+                // Si no, asumir que es un nombre de archivo local y construir la URL
+                imagen = { archivo: imagen }; // Convertir la imagen a un objeto con una propiedad 'archivo'
+            }
+
+            const response = await fetch('http://localhost:3000/api/recetas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ titulo, ingredientes, instrucciones, imagen })
+            });
+
+            if (response.ok) {
+                alert('Receta agregada');
+                window.location.href = 'index.html';
+            } else {
+                alert('Error al agregar receta');
+            }
+        });
+    </script>
+</body>
+</html>
